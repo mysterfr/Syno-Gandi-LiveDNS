@@ -1,4 +1,4 @@
-*Forked from kofemann/livedns4synology*
+***Forked from kofemann/livedns4synology***
 
 
 # Use Gandi LiveDNS from Synology NAS box
@@ -32,7 +32,7 @@ You need to provide the following configuration parameters:
 
 1. FQDN of the host
 1. Username, which is ignored
-1. Gandy API key
+1. Gandi PAT (Personal Access Token), **not to be confused with API key** which have been deprecated by Gandi.
 
 ## License
 
