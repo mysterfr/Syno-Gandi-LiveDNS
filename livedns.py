@@ -1,4 +1,4 @@
-er#!/usr/bin/env python3
+#!/usr/bin/env python3
 
 import urllib.request
 import sys
@@ -11,9 +11,17 @@ ENDPOINT = 'https://api.gandi.net/v5/livedns'
 def get_gandi_ip(domain, hostname):
     req = urllib.request.Request('%s/domains/%s/records/%s/A' % (ENDPOINT, domain, hostname))
     req.add_header('Authorization', 'Bearer %s' % api_key)
-    response = urllib.request.urlopen(req, context = ssl.create_default_context()).read()
-    payload = json.loads(response.decode('utf-8'))
-    return payload['rrset_values'][0]
+    try:
+        response = urllib.request.urlopen(req, context = ssl.create_default_context()).read()
+    except HTTPError as e:                                                                                                                                                    
+        print('HTTP Error encountered while trying to fetch recordset: ',e.code)                                                                                                                                          
+        exit()
+    except URLError as e:                                                                                                                                                     
+        print('URL Error encountered while trying to fetch recordset: ', e.reason)
+        exit()
+    else:
+        payload = json.loads(response.decode('utf-8'))
+        return payload['rrset_values'][0]
 
 def set_gandi_ip(addr, domain, hostname):
     update = {
@@ -26,8 +34,17 @@ def set_gandi_ip(addr, domain, hostname):
     req = urllib.request.Request('%s/domains/%s/records/%s/A' % (ENDPOINT, domain, hostname), method='PUT')
     req.add_header('Authorization', 'Bearer %s' % api_key)
     req.add_header('Content-Type', 'application/json')
-    response = urllib.request.urlopen(req, data = json.dumps(update).encode('utf-8'), context = ssl.create_default_context()).read()
-    payload = json.loads(response.decode('utf-8'))
+    try:
+        response = urllib.request.urlopen(req, data = json.dumps(update).encode('utf-8'), context = ssl.create_default_context()).read()
+    except HTTPError as e:
+        print('HTTP error encountered while trying to configure recordset: ',e.code)
+        exit()
+    except URLError as e:
+        print('URL Error encountered while trying to configure recordset: ', e.reason)
+        exit()
+    else:
+        payload = json.loads(response.decode('utf-8'))
+
 
 
 #       good -  Update successfully.
@@ -66,12 +83,8 @@ if __name__ == '__main__':
         hostname = fqdn[:dot]
         domain = fqdn[dot+1:]
 
-    try:
-        set_gandi_ip(ip, domain, hostname)
-        new_ip = get_gandi_ip(domain, hostname)
-        print('good')
-    except urllib.error.HTTPError as e:
-        if e.code == 401:
-            print('badauth')
+    set_gandi_ip(ip, domain, hostname)
+    new_ip = get_gandi_ip(domain, hostname)
+    print('good')
 
     exit()
