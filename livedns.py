@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+er#!/usr/bin/env python3
 
 import urllib.request
 import sys
@@ -10,7 +10,7 @@ ENDPOINT = 'https://api.gandi.net/v5/livedns'
 
 def get_gandi_ip(domain, hostname):
     req = urllib.request.Request('%s/domains/%s/records/%s/A' % (ENDPOINT, domain, hostname))
-    req.add_header('Authorization', 'Apikey %s' % api_key)
+    req.add_header('Authorization', 'Bearer %s' % api_key)
     response = urllib.request.urlopen(req, context = ssl.create_default_context()).read()
     payload = json.loads(response.decode('utf-8'))
     return payload['rrset_values'][0]
@@ -24,7 +24,7 @@ def set_gandi_ip(addr, domain, hostname):
     }
 
     req = urllib.request.Request('%s/domains/%s/records/%s/A' % (ENDPOINT, domain, hostname), method='PUT')
-    req.add_header('Authorization', 'Apikey %s' % api_key)
+    req.add_header('Authorization', 'Bearer %s' % api_key)
     req.add_header('Content-Type', 'application/json')
     response = urllib.request.urlopen(req, data = json.dumps(update).encode('utf-8'), context = ssl.create_default_context()).read()
     payload = json.loads(response.decode('utf-8'))
