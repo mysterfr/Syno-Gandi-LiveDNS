@@ -1,3 +1,6 @@
+*Forked from kofemann/livedns4synology*
+
+
 # Use Gandi LiveDNS from Synology NAS box
 
 This project aims to provide a dynamic DNS capability for Synology NAS users that
