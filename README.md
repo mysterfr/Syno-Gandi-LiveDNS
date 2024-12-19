@@ -1,6 +1,27 @@
 ***Forked from kofemann/livedns4synology***
 
 
+# Use script in a Cron job : 
+
+## Installation
+
+1. Download script your preferred location:
+*(adapt paths in the below commands to your environment)*
+```
+$ curl -o ~/scripts/livedns.py https://raw.githubusercontent.com/mysterfr/Syno-Gandi-LiveDNS/refs/heads/master/livedns.py
+$ chmod +x ~/scripts/livedns.py
+```
+
+2. Configure a cron job such as:
+```
+17 */6 * * * /home/myuser/livedns.py <username> <personal_access_token> <fqdn> <ip_adress>
+```
+
+You can also use the above command to manually update your record(s) (and check everything is working fine).
+
+If all is OK, script output should be "good".
+
+
 # Use Gandi LiveDNS from Synology NAS box
 
 This project aims to provide a dynamic DNS capability for Synology NAS users that
